@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern Calculator</title>
+<link rel="stylesheet" href="index.css">
+
+</head>
+
+<body>
+
+<div class="calculator">
+
+    <h2>✨ Smart Calculator</h2>
+
+    <input type="text" id="display" readonly>
+
+    <div class="buttons">
+        <button class="clear" onclick="clearDisplay()">C</button>
+        <button class="back" onclick="deleteLast()">⌫</button>
+        <button class="operator" onclick="append('/')">÷</button>
+        <button class="operator" onclick="append('*')">×</button>
+
+        <button class="number" onclick="append('7')">7</button>
+        <button class="number" onclick="append('8')">8</button>
+        <button class="number" onclick="append('9')">9</button>
+        <button class="operator" onclick="append('-')">−</button>
+
+        <button class="number" onclick="append('4')">4</button>
+        <button class="number" onclick="append('5')">5</button>
+        <button class="number" onclick="append('6')">6</button>
+        <button class="operator" onclick="append('+')">+</button>
+
+        <button class="number" onclick="append('1')">1</button>
+        <button class="number" onclick="append('2')">2</button>
+        <button class="number" onclick="append('3')">3</button>
+        <button class="equal" onclick="calculate()">=</button>
+
+        <button class="number" onclick="append('0')">0</button>
+        <button class="number" onclick="append('.')">.</button>
+        <button class="number" onclick="append('00')">00</button>
+        <button class="operator" onclick="append('%')">%</button>
+    </div>
+
+    <div class="history">
+        <h3>History</h3>
+        <div id="historyList"></div>
+    </div>
+
+</div>
+
+<script>
+
+let currentDisplay = "";
+
+function updateDisplay(){
+    document.getElementById("display").value = currentDisplay;
+}
+
+function append(value){
+    currentDisplay += value;
+    updateDisplay();
+}
+
+function clearDisplay(){
+    currentDisplay = "";
+    updateDisplay();
+}
+
+function deleteLast(){
+    currentDisplay = currentDisplay.slice(0,-1);
+    updateDisplay();
+}
+
+function calculate(){
+
+    try{
+
+        let expression = currentDisplay;
+        let result = eval(expression);
+
+        document.getElementById("historyList").innerHTML =
+        `<p>${expression} = ${result}</p>` +
+        document.getElementById("historyList").innerHTML;
+
+        currentDisplay = result.toString();
+        updateDisplay();
+
+    }
+    catch{
+        currentDisplay = "Error";
+        updateDisplay();
+
+        setTimeout(()=>{
+            currentDisplay="";
+            updateDisplay();
+        },1000);
+    }
+}
+
+document.addEventListener("keydown",(event)=>{
+
+    const key = event.key;
+
+    if("0123456789+-*/.%".includes(key)){
+        append(key);
+    }
+
+    else if(key === "Enter"){
+        calculate();
+    }
+
+    else if(key === "Backspace"){
+        deleteLast();
+    }
+
+    else if(key === "Escape"){
+        clearDisplay();
+    }
+});
+
+</script>
+
+</body>
+</html>
